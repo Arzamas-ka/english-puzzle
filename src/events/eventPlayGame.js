@@ -1,27 +1,29 @@
 import axios from 'axios';
 import { showLoader, hideLoader } from '../render/renderLoader';
 import { findElement } from '../helper/domHelpers';
+import dragDrop, { initGame } from './dragAndDrop';
+import createPuzzles from '../render/renderPuzzles';
 
 const playGame = (data) => {
-  const translateString = findElement('.puzzle-translating');
-  const translateButton = findElement('.tool--image');
-  const fieldSentence = findElement('.puzzle-pieces');
+  const fieldTranslate = findElement('.puzzle-translating');
 
   data.forEach((element) => {
-    fieldSentence.textContent = element.textExample;
+    fieldTranslate.textContent = element.textExampleTranslate;
   });
 
-  translateButton.addEventListener('click', () => {
-    data.forEach((element) => {
-      translateString.textContent = element.textExampleTranslate;
-    });
+  const sentence = data.map((element) => element.textExample);
+
+  console.log('sentence: ', sentence);
+
+  createPuzzles({
+    src: 'https://nexgenua.github.io/images/level1/viewvien.jpg',
+    wordsList: sentence,
+  }).then((res) => {
+    initGame(res);
   });
 };
 
-const getWords = async () => {
-  // const urlWords = (level, page) =>
-  //   `https://afternoon-falls-25894.herokuapp.com/words?page=${page}&group=${level}`;
-
+export const getWordsForPuzzle = async () => {
   const urlWords = (level, page) =>
     `https://afternoon-falls-25894.herokuapp.com/words?group=${level}&page=${page}&wordsPerExampleSentenceLTE=10&wordsPerPage=10`;
 
@@ -40,8 +42,6 @@ const getWords = async () => {
     playGame(result.data);
 
     hideLoader();
-
-    console.log(result.data);
   } catch (error) {
     console.log(error);
   }
@@ -50,7 +50,7 @@ const getWords = async () => {
 const handleGetWords = () => {
   const buttonGoPlay = findElement('.left-button');
 
-  buttonGoPlay.addEventListener('click', getWords);
+  buttonGoPlay.addEventListener('click', getWordsForPuzzle);
 };
 
 export default handleGetWords;

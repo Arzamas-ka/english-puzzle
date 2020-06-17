@@ -27,7 +27,7 @@ const renderSignInPage = () => {
 
       <div class="auth-form__bottom">
         <span>Have no account?</span>
-        <a href="#">Create new</a>
+        <a href="#" target="blank">Create new</a>
       </div>
     </form>
   `;
